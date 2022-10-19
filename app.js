@@ -7,13 +7,13 @@ const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(async (req, res) => {
     // policy service/configuration request
-    var pathname = url.parse(req.url).pathname;
-    var query = url.parse(req.url, true).query;
+    const pathname = url.parse(req.url).pathname;
+    const query = url.parse(req.url, true).query;
     console.log("Path" + pathname);
 
     // policy service/configuration request
     if (pathname === "/policy/v1/service/configuration" && req.method === "GET"){
-        // Check there is query parms
+        // Check there is query params
         if (Object.keys(query).length === 0) {
             console.log("No request params, returning 400");
             res.writeHead(400, { "Content-Type": "application/json" });
