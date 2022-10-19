@@ -17,9 +17,12 @@ class PexPolicy {
 
         
         // else {
+            
             const pol_response = Object.assign({}, pol_continue);
             pol_response.result = {"local_alias": query.local_alias}
+            console.log(pol_response);
             return new Promise((resolve, _) => resolve(pol_response))
+            
         // }
     }
 }

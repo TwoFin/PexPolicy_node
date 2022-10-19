@@ -15,6 +15,7 @@ const server = http.createServer(async (req, res) => {
     if (pathname === "/policy/v1/service/configuration" && req.method === "GET"){
         // Check there is query parms
         if (Object.keys(query).length === 0) {
+            console.log("No request params, returning 400");
             res.writeHead(400, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ message: "No query params" }));
         }
