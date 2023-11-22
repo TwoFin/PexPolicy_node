@@ -6,10 +6,11 @@ const pexpol1 = require("./pexpolicy");
 const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(async (req, res) => {
-    // policy service/configuration request
+
     const pathname = url.parse(req.url).pathname;
     const query = url.parse(req.url, true).query;
-    console.log("Path" + pathname);
+    console.log("Path: ", pathname);
+    console.log("Query: ", query);
 
     // policy service/configuration request
     if (pathname === "/policy/v1/service/configuration" && req.method === "GET"){
@@ -31,6 +32,7 @@ const server = http.createServer(async (req, res) => {
     }
     // No route present
     else {
+        console.log("Invalid path: " + pathname);
         res.writeHead(404, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ message: "Route not found" }));
     }
