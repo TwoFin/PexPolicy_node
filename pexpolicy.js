@@ -11,6 +11,8 @@ const pol_continue = {
     "action": "continue"
 }
 
+const idpAttrs = ["department", "jobtitle", "givenname", "surname"]
+
 class PexPolicy {
     // process service/configuration policy request 
     async service_config(query) {
@@ -25,9 +27,45 @@ class PexPolicy {
     // process participant/properties policy request 
     async participant_prop(query) {
 
-        const pol_response = Object.assign({}, pol_continue);
-        console.log(pol_response);
-        return new Promise((resolve, _) => resolve(pol_response))
+        // Extract parametes from service_tag
+        const tag_params = query.service_tag.split("_")
+        console.log("service_tag parmameters: ", tag_params)
+
+        /// Entry condition based on idp attribute from idp_attr list
+        if (idpAttrs.includes(tag_params[0])) {
+            /// Extract idp attribute to check
+            const idpCheckAttr = "idp_attribute_" + tag_params[0];
+
+            /// Admit participant if idp attribute matches 2nd tag parameter  
+            if (query[idpCheckAttr] === tag_params[1]) {
+                const pol_response = Object.assign({}, pol_continue);
+                console.log("Participants idp attribute matches service_tag OK")
+                console.log(pol_response);
+                return new Promise((resolve, _) => resolve(pol_response))
+            }
+
+            /// Reject if no match
+            else {
+                const pol_response = Object.assign({}, pol_reject);
+                console.log("Participants idp attribute does NOT match service_tag")
+                console.log(pol_response);
+                return new Promise((resolve, _) => resolve(pol_response))
+            }
+        }
+
+        /// All departments
+        else if (tag_params[0] === "allDept"){
+            const pol_response = Object.assign({}, pol_continue);
+            console.log(pol_response);
+            return new Promise((resolve, _) => resolve(pol_response))
+        }
+
+        /// Default reject
+        else {
+            const pol_response = Object.assign({}, pol_reject);
+            console.log(pol_response);
+            return new Promise((resolve, _) => resolve(pol_response))
+        }
 
     }
 
