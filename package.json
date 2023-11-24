@@ -1,0 +1,19 @@
+{
+  "name": "pexpolicy_node",
+  "version": "1.0.0",
+  "description": "External policy server for Pexip Infinity",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TwoFin/PexPolicy_node.git"
+  },
+  "author": "Jon Turner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TwoFin/PexPolicy_node/issues"
+  },
+  "homepage": "https://github.com/TwoFin/PexPolicy_node#readme"
+}
