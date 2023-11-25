@@ -1,12 +1,13 @@
+//clasifyBot.js
 import fetch from 'node-fetch';
 
 const pexnodeapi = "https://sip.twofin.net/api/client/v2/conferences/"
 
-class classifyBot {
+export default class classifyBot {
     async setLevel(vmr, level) {
         // Set api base path for vmr
         const vmrurl = pexnodeapi + vmr + "/"
-        
+
         // Obtain token
         var url = vmrurl + "request_token"
         var json = { "display_name": "Classify Bot", "call_tag": "classify_bot" }
@@ -19,11 +20,11 @@ class classifyBot {
         var data = await response.json();
         console.log(response.status);
         var thistoken = data.result.token;
- 
+
         // Change classification status
         var url = vmrurl + "set_classification_level"
         var json = { "level": level }
-        console.log("Requesting level change to",level, "from:", url)
+        console.log("Requesting level change to", level, "from:", url)
         var response = await fetch(url, {
             method: 'post',
             body: JSON.stringify(json),
@@ -48,6 +49,4 @@ class classifyBot {
     }
 }
 
-const levelSet = await new classifyBot().setLevel('class1', 4)
-
-export default classifyBot;
+// const levelSet = await new classifyBot().setLevel('class1', 4)

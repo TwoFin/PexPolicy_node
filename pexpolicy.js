@@ -25,7 +25,7 @@ const rankTop = ["Air Chief Marshal",
     "Admiral"
 ]
 
-class PexPolicy {
+export default class PexPolicy {
     // process service/configuration policy request 
     async service_config(query) {
 
@@ -106,4 +106,3 @@ class PexPolicy {
     }
 
 }
-module.exports = PexPolicy;
