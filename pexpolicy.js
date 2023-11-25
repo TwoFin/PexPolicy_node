@@ -1,5 +1,6 @@
 // pexpolicy.js
 // Process Pexip Infinity external policy requests
+import classifyBot from "./classifyBot.js";
 
 // default policy responses
 const pol_reject = {
@@ -72,6 +73,16 @@ export default class PexPolicy {
                 console.log(pol_response);
                 return new Promise((resolve, _) => resolve(pol_response))
             }
+        }
+
+        /// Entry condition based on classification
+        else if (tag_params[0] === "class") {
+            /// continue
+            const pol_response = Object.assign({}, pol_continue);
+            console.log("Allowing entry and setting classification to", tag_params[1])
+            console.log(pol_response);
+            // setTimeout(new classifyBot().setLevel('class1',1), 1000)
+            return new Promise((resolve, _) => resolve(pol_response))
         }
 
         /// Entry condition based on idp attribute from idpAttr list

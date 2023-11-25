@@ -43,9 +43,9 @@ export default class classifyBot {
         console.log(response.status)
 
         // Return final status - will need error checking
-        return new Promise((resolve, _) => {
-            resolve(response.status)
-        })
+        // return new Promise((resolve, _) => {
+        //     resolve(response.status)
+        // })
     }
 }
 
