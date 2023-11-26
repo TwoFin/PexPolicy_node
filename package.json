@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/TwoFin/PexPolicy_node/issues"
   },
-  "homepage": "https://github.com/TwoFin/PexPolicy_node#readme",
-  "dependencies": {
-    "node-fetch": "^3.3.2"
-  }
+  "homepage": "https://github.com/TwoFin/PexPolicy_node#readme"
 }
