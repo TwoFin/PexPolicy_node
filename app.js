@@ -1,8 +1,4 @@
 //app.js
-// const http = require('http');
-// const url = require('url')
-// const PexPolicy = require("./pexpolicy");
-
 import * as http from "http"
 import * as url from "url"
 import PexPolicy from "./pexpolicy.js";
@@ -14,7 +10,6 @@ const server = http.createServer(async (req, res) => {
     const pathname = url.parse(req.url).pathname;
     const query = url.parse(req.url, true).query;
     console.log("Path: ", pathname);
-    console.log("Query: ", query);
 
     // Check there is query params
     if (Object.keys(query).length === 0) {
