@@ -1,7 +1,7 @@
 //app.js
-const http = require('http');
-const url = require('url')
-const pexpol1 = require("./pexpolicy");
+import * as http from "http"
+import * as url from "url"
+import PexPolicy from "./pexpolicy.js";
 
 const PORT = process.env.PORT || 5000;
 
@@ -10,7 +10,6 @@ const server = http.createServer(async (req, res) => {
     const pathname = url.parse(req.url).pathname;
     const query = url.parse(req.url, true).query;
     console.log("Path: ", pathname);
-    console.log("Query: ", query);
 
     // Check there is query params
     if (Object.keys(query).length === 0) {
@@ -22,13 +21,13 @@ const server = http.createServer(async (req, res) => {
     else {
         // policy service/configuration request
         if (pathname === "/policy/v1/service/configuration" && req.method === "GET"){
-            const pol_response = await new pexpol1().service_config(query)
+            const pol_response = await new PexPolicy().service_config(query)
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(pol_response));
         }
         // policy participant/properties
         else if (pathname === "/policy/v1/participant/properties"){
-            const pol_response = await new pexpol1().participant_prop(query)
+            const pol_response = await new PexPolicy().participant_prop(query)
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(pol_response));
         }        
