@@ -14,11 +14,13 @@ const pol_continue = {
 // Set lists for IDP processing
 const idpAttrs = ["department", "jobtitle", "givenname", "surname"]
 const rankCo = ["Air Chief Marshal",
-    "Squadron Leader",
-    "Captain",
     "General",
+    "Admiral",
+    "Colonel",
     "Captain",
-    "Admiral"
+    "Squadron Leader",
+    "Major",
+    "Lieutenant"
 ]
 const rankTop = ["Air Chief Marshal",
     "General",
