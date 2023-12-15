@@ -35,6 +35,8 @@ const rankTop = ["Air Chief Marshal",
 export default class PexPolicy {
     // process service/configuration policy request 
     async service_config(query) {
+        // Log query params
+        console.log("Service query: ", query)
 
         const pol_response = Object.assign({}, pol_continue);
         pol_response.result = { "local_alias": query.local_alias }
@@ -44,13 +46,28 @@ export default class PexPolicy {
 
     // process participant/properties policy request 
     async participant_prop(query) {
+        // Log query params
+        console.log("Participant query: ", query)
+
+        // Copy responses in local scope
+        const pol_response = Object.assign({}, pol_continue);
+        const pol_response_reject = Object.assign({}, pol_reject_msg);
+
+        // Build overlay text from IDP attr
+        if (query.idp_attribute_jobtitle && query.idp_attribute_surname && query.idp_attribute_department){
+            pol_response.result = {"remote_display_name": query.idp_attribute_jobtitle + " " + query.idp_attribute_surname + " | " + query.idp_attribute_department}
+            console.log("Display name updated: ", pol_response.result.remote_display_name)
+        }
+        else {
+            console.log("Not enough IDP attributes to build overlay text name, default for IDP provider will be used")
+        }
+        
         // Extract parametes from service_tag
         const tag_params = query.service_tag.split("_")
         console.log("service_tag parmameters: ", tag_params)
 
-        // All departments tag - continue
+        // All departments tag - continue based on VMR config - TODO do we need this when default is continue?
         if (tag_params[0] === "allDept") {
-            const pol_response = Object.assign({}, pol_continue);
             console.log("Participant policy done:", pol_response);
             return new Promise((resolve, _) => resolve(pol_response))
         }
@@ -59,23 +76,21 @@ export default class PexPolicy {
         else if (tag_params[0] === "rank") {
             if (tag_params[1] === "co" && rankCo.includes(query.idp_attribute_jobtitle)) {
                 // CO Memeber
-                const pol_response = Object.assign({}, pol_continue);
                 console.log("Participants idp jobtitle is on CO list OK")
                 console.log("Participant policy done:", pol_response);
                 return new Promise((resolve, _) => resolve(pol_response))
             }
             else if (tag_params[1] === "top" && rankTop.includes(query.idp_attribute_jobtitle)) {
                 // Top Member
-                const pol_response = Object.assign({}, pol_continue);
                 console.log("Participants idp jobtitle is on TOP list OK")
                 console.log("Participant policy done:", pol_response);
                 return new Promise((resolve, _) => resolve(pol_response))
             }
             else {
-                const pol_response = Object.assign({}, pol_reject_msg);
+                pol_response_reject.result.reject_reason = "ACCESS DENIED You do not have the required rank"
                 console.log("Participants idp jobtitle NOT in any rank list")
-                console.log("Participant policy done:", pol_response);
-                return new Promise((resolve, _) => resolve(pol_response))
+                console.log("Participant policy done:", pol_response_reject);
+                return new Promise((resolve, _) => resolve(pol_response_reject))
             }
         }
 
@@ -86,7 +101,6 @@ export default class PexPolicy {
 
             // Admit participant if idp attribute matches 2nd tag parameter  
             if (query[idpCheckAttr] === tag_params[1]) {
-                const pol_response = Object.assign({}, pol_continue);
                 console.log("Participants idp attribute matches service_tag OK")
                 console.log("Participant policy done:", pol_response);
                 return new Promise((resolve, _) => resolve(pol_response))
@@ -94,18 +108,17 @@ export default class PexPolicy {
 
             // Reject if no match
             else {
-                const pol_response = Object.assign({}, pol_reject_msg);
+                pol_response_reject.result.reject_reason = "ACCESS DENIED You are not in the " + tag_params[1]
                 console.log("Participants idp attribute does NOT match service_tag")
                 console.log("Participant policy done:", pol_response);
-                return new Promise((resolve, _) => resolve(pol_response))
+                return new Promise((resolve, _) => resolve(pol_response_reject))
             }
         }
 
         // Default response
         else {
-            const pol_response = Object.assign({}, pol_continue);
             console.log("Participant policy done, default response:", pol_response);
-            return new Promise((resolve, _) => resolve(pol_response))
+            return new Promise((resolve, _) => resolve(pol_continue))
         }
 
     }
