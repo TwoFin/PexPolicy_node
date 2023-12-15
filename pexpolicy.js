@@ -6,6 +6,11 @@ const pol_reject = {
     "status": "success",
     "action": "reject"
 }
+const pol_reject_msg = {
+    "status": "success",
+    "action": "reject",
+    "result" : {"reject_reason": "ACCESS DENIED"}
+}
 const pol_continue = {
     "status": "success",
     "action": "continue"
@@ -67,7 +72,7 @@ export default class PexPolicy {
                 return new Promise((resolve, _) => resolve(pol_response))
             }
             else {
-                const pol_response = Object.assign({}, pol_reject);
+                const pol_response = Object.assign({}, pol_reject_msg);
                 console.log("Participants idp jobtitle NOT in any rank list")
                 console.log("Participant policy done:", pol_response);
                 return new Promise((resolve, _) => resolve(pol_response))
@@ -89,7 +94,7 @@ export default class PexPolicy {
 
             // Reject if no match
             else {
-                const pol_response = Object.assign({}, pol_reject);
+                const pol_response = Object.assign({}, pol_reject_msg);
                 console.log("Participants idp attribute does NOT match service_tag")
                 console.log("Participant policy done:", pol_response);
                 return new Promise((resolve, _) => resolve(pol_response))
