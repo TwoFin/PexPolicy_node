@@ -16,7 +16,7 @@ const pol_continue = {
     "action": "continue"
 }
 
-// Set lists for IDP processing
+// Set lists for IDP processing - TODO externalize
 const idpAttrs = ["department", "jobtitle", "givenname", "surname"]
 const rankCo = ["Air Chief Marshal",
     "General",
@@ -38,10 +38,27 @@ export default class PexPolicy {
         // Log query params
         console.log("Service query: ", query)
 
+        // Copy responses in local scope
         const pol_response = Object.assign({}, pol_continue);
-        pol_response.result = { "local_alias": query.local_alias }
-        console.log("Service config policy done:", pol_response);
-        return new Promise((resolve, _) => resolve(pol_response))
+        const pol_response_reject = Object.assign({}, pol_reject);
+        
+        // Check if meeting bot to bypass IDP
+        if (query.remote_alias === "MeetBot" && query.call_tag === "secret123" ){
+            pol_response.result = {
+                "name": query.local_alias,
+                "service_tag": "allDept",
+                "service_type": "conference",
+                "host_identity_provider_group":""
+            }
+            console.log("SERV_POL: Meeting Bot - bypassing IDP", pol_response)
+            return new Promise((resolve, _) => resolve(pol_response))
+        }
+
+        // Default response
+        else{
+            console.log("SERV_POL: No changes:", pol_response);
+            return new Promise((resolve, _) => resolve(pol_response))
+        }
     }
 
     // process participant/properties policy request 

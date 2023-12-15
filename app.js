@@ -9,7 +9,7 @@ const server = http.createServer(async (req, res) => {
 
     const pathname = url.parse(req.url).pathname;
     const query = url.parse(req.url, true).query;
-    console.log("Path: ", pathname);
+    console.log("Incoming reqeust - Path: ", pathname);
 
     // Check there is query params
     if (Object.keys(query).length === 0) {
