@@ -1,6 +1,9 @@
 // pexpolicy.js
 // Process Pexip Infinity external policy requests
 
+//import controlClass from pexClientAPI.js
+import controlClass from "./pexClientAPI.js";
+
 // default policy responses
 const pol_reject = {
     "status": "success",
@@ -70,21 +73,31 @@ export default class PexPolicy {
         const pol_response = Object.assign({}, pol_continue);
         const pol_response_reject = Object.assign({}, pol_reject_msg);
 
-        // Build overlay text from IDP attr
+        // Build overlay text from IDP attr - TODO Functionlize and reduce double handling
         if (query.idp_attribute_jobtitle && query.idp_attribute_surname && query.idp_attribute_department){
             pol_response.result = {"remote_display_name": query.idp_attribute_jobtitle + " " + query.idp_attribute_surname + " | " + query.idp_attribute_department}
             console.log("Display name updated: ", pol_response.result.remote_display_name)
         }
         else {
-            console.log("Not enough IDP attributes to build overlay text name, default for IDP provider will be used")
+            console.log("Not enough IDP attributes to build overlay text name, default will be used")
         }
         
         // Extract parametes from service_tag
         const tag_params = query.service_tag.split("_")
         console.log("service_tag parmameters: ", tag_params)
 
-        // All departments tag - continue based on VMR config - TODO do we need this when default is continue?
+        // All departments tag - continue based on VMR config - allows classification change based on idp_attribute_clearance
         if (tag_params[0] === "allDept") {
+            // if (query.remote_alias === "MeetBot" && query.call_tag === "secret123" )
+            // {
+            //     console.log("Meeting Bot - bypassing classification check")
+            // }
+            // else
+            // {
+            //     const result = await new controlClass().lowerClass(query.service_name, query.idp_attribute_xlearance)
+            //     console.log("VMR has classification", result)
+            // }
+            
             console.log("Participant policy done:", pol_response);
             return new Promise((resolve, _) => resolve(pol_response))
         }
