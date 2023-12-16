@@ -137,7 +137,5 @@ export default class PexPolicy {
             console.log("Participant policy done, default response:", pol_response);
             return new Promise((resolve, _) => resolve(pol_continue))
         }
-
     }
-
 }
