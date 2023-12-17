@@ -45,7 +45,7 @@ export default class PexPolicy {
         const pol_response = Object.assign({}, pol_continue);
         const pol_response_reject = Object.assign({}, pol_reject);
         
-        // Check if meeting bot to bypass IDP
+        // MeetBot bypass
         if (query.remote_alias === "MeetBot" && query.call_tag === "secret123" ){
             pol_response.result = {
                 "name": query.local_alias,
@@ -53,7 +53,7 @@ export default class PexPolicy {
                 "service_type": "conference",
                 "host_identity_provider_group":""
             }
-            console.log("SERV_POL: Meeting Bot - bypassing IDP", pol_response)
+            console.log("SERV_POL: MEETBOT bypassing service with no IDP", pol_response)
             return new Promise((resolve, _) => resolve(pol_response))
         }
 
@@ -73,6 +73,12 @@ export default class PexPolicy {
         const pol_response = Object.assign({}, pol_continue);
         const pol_response_reject = Object.assign({}, pol_reject_msg);
 
+        // MeetBot bypass
+        if (query.remote_alias === "MeetBot" && query.call_tag === "secret123" ){ // TODO Externalise secret
+            console.log("MEETBOT bypassing partipant policy")
+            return new Promise((resolve, _) => resolve(pol_response))
+        }
+
         // Build overlay text from IDP attr - TODO Functionlize and reduce double handling
         if (query.idp_attribute_jobtitle && query.idp_attribute_surname && query.idp_attribute_department){
             pol_response.result = {"remote_display_name": query.idp_attribute_jobtitle + " " + query.idp_attribute_surname + " | " + query.idp_attribute_department}
@@ -82,22 +88,15 @@ export default class PexPolicy {
             console.log("Not enough IDP attributes to build overlay text name, default will be used")
         }
         
-        // Extract parametes from service_tag
+        // Extract params from service_tag
         const tag_params = query.service_tag.split("_")
         console.log("service_tag parmameters: ", tag_params)
 
         // All departments tag - continue based on VMR config - allows classification change based on idp_attribute_clearance
+        // RACE condition here !!! May need to handle protocol: 'api' && protocol: 'webrtc' to seperate user vs clientAPI calls 16/12/23 10:30pm (or maybe just a typo)
         if (tag_params[0] === "allDept") {
-            // if (query.remote_alias === "MeetBot" && query.call_tag === "secret123" )
-            // {
-            //     console.log("Meeting Bot - bypassing classification check")
-            // }
-            // else
-            // {
-            //     const result = await new controlClass().lowerClass(query.service_name, query.idp_attribute_xlearance)
-            //     console.log("VMR has classification", result)
-            // }
-            
+            const result = await new controlClass().lowerClass(query.service_name, query.idp_attribute_clearance)
+            console.log("VMR has classification", result)
             console.log("Participant policy done:", pol_response);
             return new Promise((resolve, _) => resolve(pol_response))
         }
@@ -148,7 +147,7 @@ export default class PexPolicy {
         // Default response
         else {
             console.log("Participant policy done, default response:", pol_response);
-            return new Promise((resolve, _) => resolve(pol_continue))
+            return new Promise((resolve, _) => resolve(pol_response))
         }
     }
 }
