@@ -43,10 +43,9 @@ export default class PexPolicy {
 
         // Copy responses in local scope
         const pol_response = Object.assign({}, pol_continue);
-        const pol_response_reject = Object.assign({}, pol_reject);
         
         // MeetBot bypass
-        if (query.remote_alias === "MeetBot" && query.call_tag === "secret123" ){
+        if (query.remote_alias === "MeetBot" && query.call_tag === "secret123" ){ // TODO Externalize secret
             pol_response.result = {
                 "name": query.local_alias,
                 "service_tag": "allDept",
@@ -93,7 +92,6 @@ export default class PexPolicy {
         console.log("service_tag parmameters: ", tag_params)
 
         // All departments tag - continue based on VMR config - allows classification change based on idp_attribute_clearance
-        // RACE condition here !!! May need to handle protocol: 'api' && protocol: 'webrtc' to seperate user vs clientAPI calls 16/12/23 10:30pm (or maybe just a typo)
         if (tag_params[0] === "allDept") {
             const result = await new controlClass().lowerClass(query.service_name, query.idp_attribute_clearance)
             console.log("VMR has classification", result)

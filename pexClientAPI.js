@@ -17,7 +17,7 @@ export default class controlClass {
 
         // Obtain token
         var url = pexnodeapi + vmr + "/request_token"
-        var json = { "display_name": "MeetBot", "call_tag": "secret123" }
+        var json = { "display_name": "MeetBot", "call_tag": "secret123" } // TODO Externalise secret
         console.log(url)
         var response = await fetch(url, {
             method: 'post',
@@ -62,7 +62,7 @@ export default class controlClass {
             new_level = current_level
         }
 
-        // Release Token to disocnnect Classify_bot
+        // Release Token to disocnnect
         var url = vmrurl + "release_token";
         console.log(url)
         var response = await fetch(url, {
